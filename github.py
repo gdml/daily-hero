@@ -4,7 +4,10 @@ from urllib.parse import urljoin
 
 import pytz
 import requests
+from envparse import env
 from iso8601 import parse_date
+
+env.read_envfile()
 
 
 def parse_links(input):
@@ -19,7 +22,7 @@ def parse_links(input):
 
 def get(what):
     r = requests.get(urljoin('https://api.github.com/', what), headers={
-        'Authorization': 'Token b09dbe25381718e93a095ec4f6fdb4372cabb41a',
+        'Authorization': 'Token {}'.format(env('GITHUB_TOKEN')),
     })
 
     return r.json(), dict(parse_links(r.headers['Link']))
@@ -28,7 +31,7 @@ def get(what):
 def get_events(till: datetime):
     till = till.replace(tzinfo=pytz.timezone('Europe/Moscow'))
 
-    page = '/repos/gdml/a/issues/events'
+    page = '/repos/{}/issues/events'.format(env('GITHUB_REPO'))
 
     while True:
         got = get(page)
@@ -45,7 +48,3 @@ def get_events(till: datetime):
                 )
 
         page = got[1]['next']
-
-
-if __name__ == '__main__':
-    print(list(get_events(datetime(2019, 1, 10))))
