@@ -2,12 +2,14 @@ from collections import OrderedDict
 from datetime import datetime, timedelta
 
 import pystache
+import requests
+from envparse import env
 
 import github
 
-TEMPLATE = r"""
-{{header}}
+env.read_envfile()
 
+TEMPLATE = r"""
 {{#heroes}}
     {{name}}:
     {{#issues}}
@@ -15,6 +17,8 @@ TEMPLATE = r"""
     {{/issues}}
 
 {{/heroes}}
+
+Ваш гитхаб
 """
 
 
@@ -49,5 +53,21 @@ def get_ctx():
     return dict(heroes=heroes)
 
 
+def email(text):
+    url = 'https://api.mailgun.net/v3/{}/messages'.format(env('MAILGUN_DOMAIN'))
+    response = requests.post(
+        url,
+        auth=('api', env('MAILGUN_API_KEY')),
+        data={
+            'to': env('TO'),
+            'from': env('FROM'),
+            'subject': 'Закрытые вчера задачи',
+            'text': text,
+        },
+    )
+    if response.status_code != 200:
+        raise RuntimeError('Non-200 response from mailgun: {} ({})'.format(response.status_code, response.text))
+
+
 if __name__ == '__main__':
-    print(pystache.render(TEMPLATE, get_ctx()))
+    email(pystache.render(TEMPLATE, get_ctx()))
