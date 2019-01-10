@@ -1,8 +1,10 @@
+import time
 from collections import OrderedDict
 from datetime import datetime, timedelta
 
 import pystache
 import requests
+import schedule
 from envparse import env
 
 import github
@@ -69,5 +71,13 @@ def email(text):
         raise RuntimeError('Non-200 response from mailgun: {} ({})'.format(response.status_code, response.text))
 
 
-if __name__ == '__main__':
+def send():
     email(pystache.render(TEMPLATE, get_ctx()))
+
+
+if __name__ == '__main__':
+    schedule.every().day.at('08:34').do(send)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

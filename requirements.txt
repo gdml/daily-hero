@@ -1,6 +1,7 @@
 attrs==18.2.0
 certifi==2018.11.29
 chardet==3.0.4
+envparse==0.2.0
 flake8==3.6.0
 flake8-bugbear==18.8.0
 flake8-commas==2.0.0
@@ -14,5 +15,6 @@ pyflakes==2.0.0
 pystache==0.5.4
 pytz==2018.9
 requests==2.21.0
+schedule==0.5.0
 testfixtures==6.4.3
 urllib3==1.24.1
