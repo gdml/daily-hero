@@ -11,6 +11,7 @@ isort==4.3.4
 mccabe==0.6.1
 pycodestyle==2.4.0
 pyflakes==2.0.0
+pystache==0.5.4
 pytz==2018.9
 requests==2.21.0
 testfixtures==6.4.3

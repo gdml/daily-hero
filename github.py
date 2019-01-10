@@ -18,7 +18,6 @@ def parse_links(input):
 
 
 def get(what):
-    print('get', what)
     r = requests.get(urljoin('https://api.github.com/', what), headers={
         'Authorization': 'Token b09dbe25381718e93a095ec4f6fdb4372cabb41a',
     })
@@ -26,13 +25,15 @@ def get(what):
     return r.json(), dict(parse_links(r.headers['Link']))
 
 
-def get_events(*args, tzinfo=pytz.timezone('Europe/Moscow')):  # noqa: B008
-    till = datetime(*args, tzinfo=tzinfo)
+def get_events(till: datetime):
+    till = till.replace(tzinfo=pytz.timezone('Europe/Moscow'))
+
     page = '/repos/gdml/a/issues/events'
+
     while True:
         got = get(page)
         for event in got[0]:
-            if parse_date(event['created_at']) < till:
+            if parse_date(event['created_at']) < till:  # stop iteration if we have reached the date after the given
                 return
 
             if(event['event'] == 'closed'):
@@ -47,4 +48,4 @@ def get_events(*args, tzinfo=pytz.timezone('Europe/Moscow')):  # noqa: B008
 
 
 if __name__ == '__main__':
-    print(list(get_events(2019, 1, 10)))
+    print(list(get_events(datetime(2019, 1, 10))))
