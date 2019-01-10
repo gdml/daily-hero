@@ -72,11 +72,13 @@ def email(text):
 
 
 def send():
-    email(pystache.render(TEMPLATE, get_ctx()))
+    ctx = get_ctx()
+    if len(ctx['heroes']):
+        email(pystache.render(TEMPLATE, ctx))
 
 
 if __name__ == '__main__':
-    schedule.every().day.at('08:34').do(send)
+    schedule.every().day.at('08:44').do(send)
 
     while True:
         schedule.run_pending()
