@@ -78,7 +78,7 @@ def send():
 
 
 if __name__ == '__main__':
-    schedule.every().day.at('08:44').do(send)
+    schedule.every().day.at('05:44').do(send)
 
     while True:
         schedule.run_pending()
