@@ -42,7 +42,9 @@ def get_events(till: datetime):
             if(event['event'] == 'closed'):
                 yield dict(
                     date=parse_date(event['created_at']),
-                    issue=event['issue']['title'],
+                    issue_number=event['issue']['number'],
+                    issue_title=event['issue']['title'],
+                    issue_url=event['issue']['html_url'],
                     assignees=[assignee['login'] for assignee in event['issue']['assignees']],
                     milestone=event['issue']['milestone']['title'] if event['issue']['milestone'] is not None else None,
                 )

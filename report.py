@@ -2,26 +2,14 @@ import time
 from collections import OrderedDict
 from datetime import datetime, timedelta
 
-import pystache
 import requests
 import schedule
 from envparse import env
 
 import github
+import render
 
 env.read_envfile()
-
-TEMPLATE = r"""
-{{#heroes}}
-    {{name}}:
-    {{#issues}}
-        — {{ issue }}
-    {{/issues}}
-
-{{/heroes}}
-
-Ваш гитхаб
-"""
 
 
 def get(till):
@@ -39,8 +27,8 @@ def get_heroes():
         if assignees not in heroes:
             heroes[assignees] = []
 
-        heroes[assignees].append(issue['issue'])
-
+        heroes[assignees].append({'number': issue['issue_number'], 'title': issue['issue_title'], 'url': issue['issue_url']})
+    
     return OrderedDict(sorted(heroes.items(), key=lambda hero: len(hero[1]), reverse=True))
 
 
@@ -49,13 +37,13 @@ def get_ctx():
     for hero, issues in get_heroes().items():
         heroes.append({
             'name': hero,
-            'issues': [dict(issue=issue) for issue in sorted(issues)],
+            'issues': [issue for issue in sorted(issues, key=lambda issue: issue['title'])],
         })
 
     return dict(heroes=heroes)
 
 
-def email(text):
+def email(text, html):
     url = 'https://api.mailgun.net/v3/{}/messages'.format(env('MAILGUN_DOMAIN'))
     response = requests.post(
         url,
@@ -65,6 +53,7 @@ def email(text):
             'from': env('FROM'),
             'subject': 'Закрытые вчера задачи',
             'text': text,
+            'html': html,
         },
     )
     if response.status_code != 200:
@@ -74,7 +63,9 @@ def email(text):
 def send():
     ctx = get_ctx()
     if len(ctx['heroes']):
-        email(pystache.render(TEMPLATE, ctx))
+        text = render.render_text(ctx)
+        html = render.render_html(ctx)
+        email(text, html)
 
 
 if __name__ == '__main__':
