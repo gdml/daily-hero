@@ -18,7 +18,7 @@ services:
       TO: developers@gdml.ru
       FROM: GitHub <developers@gdematerial.ru>
       MAILGUN_API_KEY: KEY
-      MAILGUN_DOMAIN: ***REMOVED***
+      MAILGUN_DOMAIN: em.gdematerial.ru
 ```
 
 ## Contributing
