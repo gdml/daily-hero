@@ -1,4 +1,4 @@
-# daily-hero
+# Ежедневный герой
 
 Шлет каждый день письмо о том, какие задачи вчера были закрыты:
 
@@ -13,8 +13,8 @@ services:
   daily-hero:
     image: gdml/daily-hero:0.0.1
     environment:
-      GITHUB_REPO: gdml/a
-      GITHUB_TOKEN: TOKEN
+      GITHUB_REPO: <Your repo path, like gdml/a>
+      GITHUB_TOKEN: <Your token, get it at https://github.com/settings/tokens>
       TO: developers@gdml.ru
       FROM: GitHub <developers@gdematerial.ru>
       MAILGUN_API_KEY: KEY
