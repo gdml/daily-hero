@@ -11,7 +11,7 @@ version: '3.6'
 
 services:
   daily-hero:
-    image: gdml/daily-hero:0.0.1
+    image: gdml/daily-hero:0.0.4
     environment:
       GITHUB_REPO: <Your repo path, like gdml/a>
       GITHUB_TOKEN: <Your token, get it at https://github.com/settings/tokens>
@@ -22,4 +22,6 @@ services:
 ```
 
 ## Contributing
-Запилите новый релиз, дождитесь билда и обновите образ на проде
+Сборка образов на докерхабе происходит автоматически из релизов.
+
+Чтобы обновить прод — поменяйте руками версию образа.
