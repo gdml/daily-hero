@@ -13,7 +13,7 @@ version: '3.6'
 
 services:
   daily-hero:
-    image: gdml/daily-hero:0.0.4
+    image: gdml/daily-hero:1.0.4
     environment:
       GITHUB_REPO: <Your repo path, like gdml/a>
       GITHUB_TOKEN: <Your token, get it at https://github.com/settings/tokens>
